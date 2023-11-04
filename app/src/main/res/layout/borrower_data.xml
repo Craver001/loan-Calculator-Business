@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Borrower Name: Craver"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:textStyle="bold"/>
 
     <TextView
@@ -20,14 +20,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Interest Rate: 10%"
-        android:textSize="16sp"/>
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/loanAmountTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Loan Amount: $10,000"
-        android:textSize="16sp"/>
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/loanTermTextView"
@@ -48,5 +48,35 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Total Principal with Interest: $14,378"
-        android:textSize="16sp"/>
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/startDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Loan Date : Jan 17 2023"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/endDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Loan End : Jan 17 2023"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/paymentRecord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Loan PAyment :"
+        android:textSize="18sp"/>
+
+    <Button
+        android:id="@+id/payment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="make payment" />
+
+
 </LinearLayout>

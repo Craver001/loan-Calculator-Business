@@ -6,6 +6,8 @@ import android.content.Context
 import android.widget.TextView
 import android.app.Dialog
 import android.view.Window
+import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +18,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.FirebaseDatabase
 import dev.gameplay.loancal.Class.LoanInfo
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class BorrowerList : AppCompatActivity() {
     lateinit var binding: ActivityBorrowerListBinding
@@ -75,6 +80,9 @@ class BorrowerList : AppCompatActivity() {
                     val loanTerm = borrowerData.loanTerm
                     val monthlyPayment = borrowerData.monthlyPayment.toString()
                     val totalPrincipal = borrowerData.totalPrincipalWithInterest.toString()
+                    val totalLoanPayment = borrowerData.totalLoanPayment.toString()
+                    val startDate = borrowerData.startDate // Get the start date from your Firebase data
+                    val endDate = borrowerData.endDate // Get the end date from your Firebase data
 
                     showBorrowerDataDialog(
                         this@BorrowerList,
@@ -83,7 +91,10 @@ class BorrowerList : AppCompatActivity() {
                         loanAmount,
                         loanTerm,
                         monthlyPayment,
-                        totalPrincipal
+                        totalPrincipal,
+                        totalLoanPayment,
+                        startDate,
+                        endDate
                     )
                 } else {
                     Toast.makeText(this@BorrowerList, "Borrower data not found", Toast.LENGTH_SHORT).show()
@@ -103,7 +114,10 @@ class BorrowerList : AppCompatActivity() {
         loanAmount: String,
         loanTerm: String,
         monthlyPayment: String,
-        totalPrincipal: String
+        totalPrincipal: String,
+        totalLoanPayment: String, // Corrected parameter here
+        startDate: Date,
+        endDate: Date
     ) {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -115,6 +129,14 @@ class BorrowerList : AppCompatActivity() {
         val loanTermTextView = dialog.findViewById<TextView>(R.id.loanTermTextView)
         val monthlyPaymentTextView = dialog.findViewById<TextView>(R.id.monthlyPaymentTextView)
         val totalPrincipalTextView = dialog.findViewById<TextView>(R.id.totalPrincipalTextView)
+        val totalLoanPaymentTextView = dialog.findViewById<TextView>(R.id.paymentRecord) // Corrected TextView name here
+        val startDateTextView = dialog.findViewById<TextView>(R.id.startDate)
+        val endDateTextView = dialog.findViewById<TextView>(R.id.endDate)
+        val payment = dialog.findViewById<Button>(R.id.payment)
+
+        val dateFormat = SimpleDateFormat("MM-dd", Locale.getDefault())
+        val formattedStartDate = dateFormat.format(startDate)
+        val formattedEndDate = dateFormat.format(endDate)
 
         borrowerNameTextView.text = "Borrower Name: $borrowerName"
         interestRateTextView.text = "Interest Rate: $interestRate"
@@ -122,8 +144,75 @@ class BorrowerList : AppCompatActivity() {
         loanTermTextView.text = "Loan Term: $loanTerm"
         monthlyPaymentTextView.text = "Monthly Payment: $monthlyPayment"
         totalPrincipalTextView.text = "Total Principal with Interest: $totalPrincipal"
+        totalLoanPaymentTextView.text = "Total Loan Payment: $totalLoanPayment" // Corrected text here
+        startDateTextView.text = "Start Date: $formattedStartDate"
+        endDateTextView.text = "End Date: $formattedEndDate"
+
+        payment.setOnClickListener {
+            openPaymentDialog(borrowerName)
+
+        }
 
         dialog.setCancelable(true)
         dialog.show()
     }
+
+
+    // Inside your BorrowerList class
+
+    // Add this function to open the payment dialog
+    private fun openPaymentDialog(borrowerName: String) {
+        val paymentDialog = Dialog(this)
+        paymentDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        paymentDialog.setContentView(R.layout.payment_dialog) // Create a layout for payment input
+
+        val paymentAmountEditText = paymentDialog.findViewById<EditText>(R.id.paymentAmountEditText)
+        val confirmPaymentButton = paymentDialog.findViewById<Button>(R.id.confirmPaymentButton)
+
+        confirmPaymentButton.setOnClickListener {
+            val paymentAmountText = paymentAmountEditText.text.toString()
+            if (paymentAmountText.isNotBlank()) {
+                val paymentAmount = paymentAmountText.toDouble()
+                recordUserPayment(borrowerName, paymentAmount)
+                paymentDialog.dismiss()
+            } else {
+                Toast.makeText(this, "Please enter a valid payment amount.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        paymentDialog.setCancelable(true)
+        paymentDialog.show()
+    }
+
+    // Create this function to record the user's payment in Firebase
+    private fun recordUserPayment(borrowerName: String, paymentAmount: Double) {
+        val androidId = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+        val borrowerRef = databaseReference.child("loans").child(androidId).child(borrowerName)
+
+        borrowerRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val borrowerData = dataSnapshot.getValue(LoanInfo::class.java)
+
+                if (borrowerData != null) {
+                    val totalLoanPayment = borrowerData.totalLoanPayment + paymentAmount
+
+                    // Update the Firebase data with the new total payment
+                    borrowerRef.child("totalLoanPayment").setValue(totalLoanPayment)
+                        .addOnSuccessListener {
+                            Toast.makeText(this@BorrowerList, "Payment successfully recorded.", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(this@BorrowerList, "Failed to record the payment. Please try again.", Toast.LENGTH_SHORT).show()
+                        }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Toast.makeText(this@BorrowerList, "Database error: " + databaseError.message, Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+
+
 }

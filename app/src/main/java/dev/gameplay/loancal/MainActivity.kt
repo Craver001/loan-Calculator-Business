@@ -21,6 +21,8 @@ import androidx.appcompat.app.AlertDialog
 import com.google.firebase.database.FirebaseDatabase
 import dev.gameplay.loancal.Class.LoanInfo
 import dev.gameplay.loancal.databinding.ActivityMainBinding
+import java.util.Calendar
+import java.util.Date
 
 
 class MainActivity : AppCompatActivity() {
@@ -185,13 +187,33 @@ class MainActivity : AppCompatActivity() {
                 // Calculate the total principal with interest
                 val totalPrincipalWithInterest = (monthlyPayment * numberOfPayments).toInt()
 
-                val androidId = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
-                // Create a LoanInfo object
-                val loanInfo = LoanInfo(borrowerName, loanAmount.toInt(), loanTerm, interestRate, monthlyPayment.toInt(), totalPrincipalWithInterest)
+                val currentDate = Date() // Get the current date
 
+                // Calculate the end date based on the start date (current date) and loan term
+                val calendar = Calendar.getInstance()
+                calendar.time = currentDate
+                calendar.add(Calendar.MONTH, parsedLoanTerm)
+
+                val endDate = calendar.time
+
+                val androidId = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+                val totalLoanPayment =0
+
+                // Create a LoanInfo object with start and end dates
+                val loanInfo = LoanInfo(
+                    borrowerName,
+                    loanAmount.toInt(),
+                    loanTerm,
+                    interestRate,
+                    monthlyPayment.toInt(),
+                    totalPrincipalWithInterest,
+                    totalLoanPayment,
+                    currentDate, // Start date
+                    endDate // End date
+                )
 
                 // Upload the data to Firebase Realtime Database under the user's unique ID
-                val databaseReference = FirebaseDatabase.getInstance().reference.child("loans").child(androidId).child("$borrowerName")
+                val databaseReference = FirebaseDatabase.getInstance().reference.child("loans").child(androidId).child(borrowerName)
                 databaseReference.setValue(loanInfo)
                     .addOnSuccessListener {
                         // Data was successfully sent
@@ -207,6 +229,7 @@ class MainActivity : AppCompatActivity() {
                 showToast("No internet connection. Please check your network settings.")
             }
         }
+
 
 
 

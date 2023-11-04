@@ -16,6 +16,9 @@
         android:theme="@style/Theme.Loancal"
         tools:targetApi="31">
         <activity
+            android:name=".RecordBorrowerLoan"
+            android:exported="false" />
+        <activity
             android:name=".GenerateLoan"
             android:exported="false" />
         <activity
