@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "608395022659",
+    "project_id": "loan-calculator-for-business",
+    "storage_bucket": "loan-calculator-for-business.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:608395022659:android:a2faa92c8d2349964b9ff6",
+        "android_client_info": {
+          "package_name": "dev.gameplay.loancal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpNVBLNSQS36rdR3-71Zt-6zrXoTu1uxY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
