@@ -3,29 +3,105 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:gravity="center"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
+    android:background="@drawable/re2"
     tools:context=".MainActivity">
 
 
-    <Button
-        android:id="@+id/calculator"
+    <RelativeLayout
         android:layout_width="match_parent"
+        android:gravity="center"
         android:layout_height="wrap_content"
-        android:text="Loan Calculator" />
+        android:background="@drawable/shape1"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:clickable="true">
 
-    <Button
-        android:id="@+id/generateLoan"
+        <TextView
+            android:id="@+id/calculator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/calculator"
+            android:gravity="center"
+            android:text="Loan Calculator"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
+        android:gravity="center"
         android:layout_height="wrap_content"
-        android:text="Generate Loan for Borrower" />
+        android:background="@drawable/shape1"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:clickable="true">
 
-    <Button
+
+        <TextView
+            android:id="@+id/generateLoan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/loan_generate"
+            android:gravity="center"
+            android:text="Generate Loan"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textAlignment="center"/>
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/borrowerList"
         android:layout_width="match_parent"
+        android:gravity="center"
         android:layout_height="wrap_content"
-        android:text="Borrower List" />
+        android:background="@drawable/shape1"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:clickable="true">
 
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/list2"
+            android:gravity="center"
+            android:text="Borrower List"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textAlignment="center"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape1"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:clickable="true">
+
+
+        <TextView
+            android:id="@+id/borrowerHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/history"
+            android:gravity="center"
+            android:text="Borrower Payment History"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textAlignment="center"/>
+    </RelativeLayout>
 </LinearLayout>

@@ -16,16 +16,21 @@
         android:theme="@style/Theme.Loancal"
         tools:targetApi="31">
         <activity
-            android:name=".RecordBorrowerLoan"
+            android:name=".PaymentHistory"
             android:exported="false" />
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/ads_id" />
+
         <activity
-            android:name=".GenerateLoan"
+            android:name=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".BorrowerList"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".PolicyConfirmation"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

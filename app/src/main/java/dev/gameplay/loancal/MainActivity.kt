@@ -26,7 +26,7 @@ import java.util.Date
 
 
 class MainActivity : AppCompatActivity() {
-    lateinit var binding: ActivityMainBinding
+    lateinit var binding:ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +43,11 @@ class MainActivity : AppCompatActivity() {
 
         binding.borrowerList.setOnClickListener {
             val intent = Intent(this@MainActivity,BorrowerList::class.java)
+            startActivity(intent)
+        }
+
+        binding.borrowerHistory.setOnClickListener {
+            val intent = Intent(this@MainActivity,PaymentHistory::class.java)
             startActivity(intent)
         }
 
@@ -107,7 +112,7 @@ class MainActivity : AppCompatActivity() {
 
         val dialogBuilder = AlertDialog.Builder(this)
             .setView(dialogView)
-            .setTitle("Loan Calculator")
+            .setTitle("Generate Loan For Borrower")
 
         val dialog = dialogBuilder.create()
         dialog.show()

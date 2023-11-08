@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">loancal</string>
+    <string name="app_name">Loan Calculator For Business</string>
+    <string name="ads_id">ca-app-pub-4505342510190923~4089978770</string>
+    <string name="banner1">ca-app-pub-4505342510190923/1019218025</string>
+    <string name="banner2">ca-app-pub-4505342510190923/9519975833</string>
+    <string name="dataCollection">Data Collection Confirmation</string>
+    <string name="consent">Consent Confirmation</string>
 </resources>

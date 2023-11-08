@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.FirebaseDatabase
 import dev.gameplay.loancal.Class.LoanInfo
+import dev.gameplay.loancal.Class.PaymentInfo
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -134,9 +135,9 @@ class BorrowerList : AppCompatActivity() {
         val endDateTextView = dialog.findViewById<TextView>(R.id.endDate)
         val payment = dialog.findViewById<Button>(R.id.payment)
 
-        val dateFormat = SimpleDateFormat("MM-dd", Locale.getDefault())
-        val formattedStartDate = dateFormat.format(startDate)
-        val formattedEndDate = dateFormat.format(endDate)
+        val dateFormat = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
+        val formattedStartDate = dateFormat.format(endDate)
+        val formattedEndDate = dateFormat.format(startDate)
 
         borrowerNameTextView.text = "Borrower Name: $borrowerName"
         interestRateTextView.text = "Interest Rate: $interestRate"
@@ -150,6 +151,8 @@ class BorrowerList : AppCompatActivity() {
 
         payment.setOnClickListener {
             openPaymentDialog(borrowerName)
+
+            dialog.dismiss()
 
         }
 
@@ -199,7 +202,11 @@ class BorrowerList : AppCompatActivity() {
                     // Update the Firebase data with the new total payment
                     borrowerRef.child("totalLoanPayment").setValue(totalLoanPayment)
                         .addOnSuccessListener {
+                            // Payment successfully recorded
                             Toast.makeText(this@BorrowerList, "Payment successfully recorded.", Toast.LENGTH_SHORT).show()
+
+                            // Now, record the payment in the payment history
+                            recordPaymentInHistory(androidId, borrowerName, paymentAmount)
                         }
                         .addOnFailureListener {
                             Toast.makeText(this@BorrowerList, "Failed to record the payment. Please try again.", Toast.LENGTH_SHORT).show()
@@ -211,6 +218,26 @@ class BorrowerList : AppCompatActivity() {
                 Toast.makeText(this@BorrowerList, "Database error: " + databaseError.message, Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    private fun recordPaymentInHistory(userId: String, borrowerName: String, paymentAmount: Double) {
+        val androidId = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+        val dateFormat = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
+
+        val paymentDate = dateFormat.format(Date()) // Get the current date in the desired format
+        val paymentHistoryRef = databaseReference.child("payment_history").child(androidId).push()
+
+        val paymentData = PaymentInfo(borrowerName, paymentAmount, paymentDate)
+
+        // Set the payment history data under the user's ID
+        paymentHistoryRef.setValue(paymentData)
+            .addOnSuccessListener {
+                // Payment history recorded successfully
+                Toast.makeText(this@BorrowerList, "Payment history recorded.", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this@BorrowerList, "Failed to record payment history. Please try again.", Toast.LENGTH_SHORT).show()
+            }
     }
 
 
